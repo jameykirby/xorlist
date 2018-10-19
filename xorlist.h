@@ -29,7 +29,7 @@
 // For more information, please refer to <http://unlicense.org/>
 // 
 
-// Example to enumerte the list from head to tail.
+// Example to enumerate the list from head to tail.
 //
 // EnumerateXorList(PXOR_LIST List) {
 //		PXOR_LIST_ENTRY Current = List->Head;

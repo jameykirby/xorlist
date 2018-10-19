@@ -34,26 +34,26 @@
 PXOR_LIST_ENTRY InsertTailXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry) {
 	if (List->Head == NULL) {
 		Entry->Pointer = NULL;
-		List->Head = List->Tail = Entry;
+		List->Head = Entry;
 	}
 	else {
 		Entry->Pointer = _xor_(NULL, List->Tail);
 		List->Tail->Pointer = _xor_(Entry, _xor_(List->Tail->Pointer, NULL));
-		List->Tail = Entry;
 	}
+	List->Tail = Entry;
 	return Entry;
 }
 
 PXOR_LIST_ENTRY InsertHeadXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry) {
 	if (List->Head == NULL) {
 		Entry->Pointer = NULL;
-		List->Head = List->Tail = Entry;
+		List->Tail = Entry;
 	}
 	else {
 		Entry->Pointer = _xor_(List->Head, NULL);
 		List->Head->Pointer = _xor_(Entry, _xor_(NULL, List->Head->Pointer));
-		List->Head = Entry;
 	}
+	List->Head = Entry;
 	return Entry;
 }
 
