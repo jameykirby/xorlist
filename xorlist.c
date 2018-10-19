@@ -1,7 +1,7 @@
 //
 // xorlist.c
 //
-// Native NT implementation of an xor chain list.
+// Windows kernel implementation of an xor chain list.
 //
 // This is free and unencumbered software released into the public domain.
 //
@@ -37,9 +37,22 @@ PXOR_LIST_ENTRY InsertTailXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry) {
 		List->Head = List->Tail = Entry;
 	}
 	else {
-		Entry->Pointer = _xor_(List->Tail, NULL);
-		List->Tail->Pointer = _xor_(_xor_(NULL, List->Tail->Pointer), Entry);
+		Entry->Pointer = _xor_(NULL, List->Tail);
+		List->Tail->Pointer = _xor_(Entry, _xor_(List->Tail->Pointer, NULL));
 		List->Tail = Entry;
+	}
+	return Entry;
+}
+
+PXOR_LIST_ENTRY InsertHeadXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry) {
+	if (List->Head == NULL) {
+		Entry->Pointer = NULL;
+		List->Head = List->Tail = Entry;
+	}
+	else {
+		Entry->Pointer = _xor_(List->Head, NULL);
+		List->Head->Pointer = _xor_(Entry, _xor_(NULL, List->Head->Pointer));
+		List->Head = Entry;
 	}
 	return Entry;
 }
@@ -47,14 +60,29 @@ PXOR_LIST_ENTRY InsertTailXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry) {
 PXOR_LIST_ENTRY RemoveHeadXorList(PXOR_LIST List) {
 	PXOR_LIST_ENTRY Entry = List->Head;
 	if (Entry != NULL) {
-		PXOR_LIST_ENTRY Next = _xor_(Entry->Pointer, NULL);
+		PXOR_LIST_ENTRY Next = _xor_(NULL, Entry->Pointer);
 		if (Next == NULL) {
 			List->Tail = NULL;
 		}
 		else {
-			Next->Pointer = _xor_(_xor_(Next->Pointer, NULL), Entry);
+			Next->Pointer = _xor_(Entry, _xor_(NULL, Next->Pointer));
 		}
 		List->Head = Next;
+	}
+	return Entry;
+}
+
+PXOR_LIST_ENTRY RemoveTailXorList(PXOR_LIST List) {
+	PXOR_LIST_ENTRY Entry = List->Tail;
+	if (Entry != NULL) {
+		PXOR_LIST_ENTRY Prev = _xor_(Entry->Pointer, NULL);
+		if (Prev == NULL) {
+			List->Head = NULL;
+		}
+		else {
+			Prev->Pointer = _xor_(Entry, _xor_(Prev->Pointer, NULL));
+		}
+		List->Tail = Prev;
 	}
 	return Entry;
 }
@@ -73,6 +101,24 @@ PXOR_LIST_ENTRY ExInterlockedRemoveHeadXorList(PXOR_LIST List,
 	KIRQL Irql;
 	KeAcquireSpinLock(Lock, &Irql);
 	PXOR_LIST_ENTRY Entry = RemoveHeadXorList(List);
+	KeReleaseSpinLock(Lock, Irql);
+	return Entry;
+}
+
+PXOR_LIST_ENTRY ExInterlockedInsertHeadXorList(PXOR_LIST List,
+	PXOR_LIST_ENTRY Entry, PKSPIN_LOCK Lock) {
+	KIRQL Irql;
+	KeAcquireSpinLock(Lock, &Irql);
+	InsertHeadXorList(List, Entry);
+	KeReleaseSpinLock(Lock, Irql);
+	return Entry;
+}
+
+PXOR_LIST_ENTRY ExInterlockedRemoveTailXorList(PXOR_LIST List,
+	PKSPIN_LOCK Lock) {
+	KIRQL Irql;
+	KeAcquireSpinLock(Lock, &Irql);
+	PXOR_LIST_ENTRY Entry = RemoveTailXorList(List);
 	KeReleaseSpinLock(Lock, Irql);
 	return Entry;
 }

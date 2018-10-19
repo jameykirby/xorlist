@@ -1,7 +1,7 @@
 //
 // xorlist.h
 //
-// Native NT implementation of an xor chain list.
+// Windows kernel implementation of an xor chain list.
 //
 // This is free and unencumbered software released into the public domain.
 //
@@ -29,6 +29,21 @@
 // For more information, please refer to <http://unlicense.org/>
 // 
 
+// Example to enumerte the list from head to tail.
+//
+// EnumerateXorList(PXOR_LIST List) {
+//		PXOR_LIST_ENTRY Current = List->Head;
+//		PXOR_LIST_ENTRY Previous = NULL;
+//		PXOR_LIST_ENTRY Next = NULL;
+//		while (Current != NULL) {
+//			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
+//				"Item pointer: %p\n", Current));
+//			Next = _xor_(Previous, Current->Pointer);
+//			Previous = Current;
+//			Current = Next;
+//		}
+//	}
+
 #if !defined (_XOR_LIST_H)
 #define _XOR_LIST_H
 
@@ -48,18 +63,26 @@ FORCEINLINE PXOR_LIST_ENTRY _xor_(PXOR_LIST_ENTRY Back,
 	return (PXOR_LIST_ENTRY)((ULONG_PTR)Back ^ (ULONG_PTR)Forward);
 }
 
-FORCEINLINE VOID InitializeXorListHead(PXOR_LIST List) {
+FORCEINLINE VOID InitializeXorList(PXOR_LIST List) {
 	List->Head = List->Tail = NULL;
 	return;
 }
 
 PXOR_LIST_ENTRY InsertTailXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry);
+PXOR_LIST_ENTRY InsertHeadXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry);
 PXOR_LIST_ENTRY RemoveHeadXorList(PXOR_LIST List);
+PXOR_LIST_ENTRY RemoveTailXorList(PXOR_LIST List);
 
 PXOR_LIST_ENTRY ExInterlockedInsertTailXorList(PXOR_LIST List,
 	PXOR_LIST_ENTRY Entry, PKSPIN_LOCK Lock);
 
+PXOR_LIST_ENTRY ExInterlockedInsertHeadXorList(PXOR_LIST List,
+	PXOR_LIST_ENTRY Entry, PKSPIN_LOCK Lock);
+
 PXOR_LIST_ENTRY ExInterlockedRemoveHeadXorList(PXOR_LIST List,
+	PKSPIN_LOCK Lock);
+
+PXOR_LIST_ENTRY ExInterlockedRemoveTailXorList(PXOR_LIST List,
 	PKSPIN_LOCK Lock);
 
 #endif
