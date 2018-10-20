@@ -31,7 +31,7 @@
 
 // Example to enumerate the list from head to tail.
 //
-// EnumerateXorList(PXOR_LIST List) {
+// EnumerateFromHeadXorList(PXOR_LIST List) {
 //		PXOR_LIST_ENTRY Current = List->Head;
 //		PXOR_LIST_ENTRY Previous = NULL;
 //		PXOR_LIST_ENTRY Next = NULL;
@@ -41,6 +41,21 @@
 //			Next = _xor_(Previous, Current->Pointer);
 //			Previous = Current;
 //			Current = Next;
+//		}
+//	}
+
+// Example to enumerate the list from tail to head.
+//
+// EnumerateFromTailXorList(PXOR_LIST List) {
+//		PXOR_LIST_ENTRY Current = List->Tail;
+//		PXOR_LIST_ENTRY Previous = NULL;
+//		PXOR_LIST_ENTRY Next = NULL;
+//		while (Current != NULL) {
+//			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
+//				"Item pointer: %p\n", Current));
+//			Previous = _xor_(Next, Current->Pointer);
+//			Next = Current;
+//			Current = Previous;
 //		}
 //	}
 

@@ -96,20 +96,20 @@ PXOR_LIST_ENTRY ExInterlockedInsertTailXorList(PXOR_LIST List,
 	return Entry;
 }
 
-PXOR_LIST_ENTRY ExInterlockedRemoveHeadXorList(PXOR_LIST List,
-	PKSPIN_LOCK Lock) {
-	KIRQL Irql;
-	KeAcquireSpinLock(Lock, &Irql);
-	PXOR_LIST_ENTRY Entry = RemoveHeadXorList(List);
-	KeReleaseSpinLock(Lock, Irql);
-	return Entry;
-}
-
 PXOR_LIST_ENTRY ExInterlockedInsertHeadXorList(PXOR_LIST List,
 	PXOR_LIST_ENTRY Entry, PKSPIN_LOCK Lock) {
 	KIRQL Irql;
 	KeAcquireSpinLock(Lock, &Irql);
 	InsertHeadXorList(List, Entry);
+	KeReleaseSpinLock(Lock, Irql);
+	return Entry;
+}
+
+PXOR_LIST_ENTRY ExInterlockedRemoveHeadXorList(PXOR_LIST List,
+	PKSPIN_LOCK Lock) {
+	KIRQL Irql;
+	KeAcquireSpinLock(Lock, &Irql);
+	PXOR_LIST_ENTRY Entry = RemoveHeadXorList(List);
 	KeReleaseSpinLock(Lock, Irql);
 	return Entry;
 }
