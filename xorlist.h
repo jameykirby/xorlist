@@ -31,10 +31,10 @@
 
 // Example to enumerate the list from head to tail.
 //
-// EnumerateFromHeadXorList(PXOR_LIST List) {
-//		PXOR_LIST_ENTRY Current = List->Head;
-//		PXOR_LIST_ENTRY Previous = NULL;
-//		PXOR_LIST_ENTRY Next = NULL;
+// EnumerateFromHeadXList(PXLIST_HEADER List) {
+//		PXLIST_ENTRY Current = List->Head;
+//		PXLIST_ENTRY Previous = NULL;
+//		PXLIST_ENTRY Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
 //				"Item pointer: %p\n", Current));
@@ -46,10 +46,10 @@
 
 // Example to enumerate the list from tail to head.
 //
-// EnumerateFromTailXorList(PXOR_LIST List) {
-//		PXOR_LIST_ENTRY Current = List->Tail;
-//		PXOR_LIST_ENTRY Previous = NULL;
-//		PXOR_LIST_ENTRY Next = NULL;
+// EnumerateFromTailXList(PXLIST_HEADER List) {
+//		PXLIST_ENTRY Current = List->Tail;
+//		PXLIST_ENTRY Previous = NULL;
+//		PXLIST_ENTRY Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
 //				"Item pointer: %p\n", Current));
@@ -59,8 +59,8 @@
 //		}
 //	}
 
-#if !defined (_XOR_LIST_H)
-#define _XOR_LIST_H
+#if !defined (_XLIST_H)
+#define _XLIST_H
 
 #include <ntddk.h>
 
