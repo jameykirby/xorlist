@@ -64,40 +64,40 @@
 
 #include <ntddk.h>
 
-typedef struct _XOR_LIST_ENTRY {
-	struct _XOR_LIST_ENTRY *Pointer;
-} XOR_LIST_ENTRY, *PXOR_LIST_ENTRY;
+typedef struct _XLIST_ENTRY {
+	struct _XLIST_ENTRY *Pointer;
+} XLIST_ENTRY, *PXLIST_ENTRY;
 
-typedef struct _XOR_LIST {
-	PXOR_LIST_ENTRY Head;
-	PXOR_LIST_ENTRY Tail;
-} XOR_LIST, *PXOR_LIST;
+typedef struct _XLIST_HEADER {
+	PXLIST_ENTRY Head;
+	PXLIST_ENTRY Tail;
+} XLIST_HEADER, *PXLIST_HEADER;
 
-FORCEINLINE PXOR_LIST_ENTRY _xor_(PXOR_LIST_ENTRY Back,
-	PXOR_LIST_ENTRY Forward) {
-	return (PXOR_LIST_ENTRY)((ULONG_PTR)Back ^ (ULONG_PTR)Forward);
+FORCEINLINE PXLIST_ENTRY _xor_(PXLIST_ENTRY Back,
+	PXLIST_ENTRY Forward) {
+	return (PXLIST_ENTRY)((ULONG_PTR)Back ^ (ULONG_PTR)Forward);
 }
 
-FORCEINLINE VOID InitializeXorList(PXOR_LIST List) {
+FORCEINLINE VOID InitializeXListHeader(PXLIST_HEADER List) {
 	List->Head = List->Tail = NULL;
 	return;
 }
 
-PXOR_LIST_ENTRY InsertTailXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry);
-PXOR_LIST_ENTRY InsertHeadXorList(PXOR_LIST List, PXOR_LIST_ENTRY Entry);
-PXOR_LIST_ENTRY RemoveHeadXorList(PXOR_LIST List);
-PXOR_LIST_ENTRY RemoveTailXorList(PXOR_LIST List);
+PXLIST_ENTRY InsertTailXorList(PXLIST_HEADER List, PXLIST_ENTRY Entry);
+PXLIST_ENTRY InsertHeadXorList(PXLIST_HEADER List, PXLIST_ENTRY Entry);
+PXLIST_ENTRY RemoveHeadXorList(PXLIST_HEADER List);
+PXLIST_ENTRY RemoveTailXorList(PXLIST_HEADER List);
 
-PXOR_LIST_ENTRY ExInterlockedInsertTailXorList(PXOR_LIST List,
-	PXOR_LIST_ENTRY Entry, PKSPIN_LOCK Lock);
+PXLIST_ENTRY InterlockedInsertTailXorList(PXLIST_HEADER List,
+	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock);
 
-PXOR_LIST_ENTRY ExInterlockedInsertHeadXorList(PXOR_LIST List,
-	PXOR_LIST_ENTRY Entry, PKSPIN_LOCK Lock);
+PXLIST_ENTRY InterlockedInsertHeadXorList(PXLIST_HEADER List,
+	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock);
 
-PXOR_LIST_ENTRY ExInterlockedRemoveHeadXorList(PXOR_LIST List,
+PXLIST_ENTRY InterlockedRemoveHeadXorList(PXLIST_HEADER List,
 	PKSPIN_LOCK Lock);
 
-PXOR_LIST_ENTRY ExInterlockedRemoveTailXorList(PXOR_LIST List,
+PXLIST_ENTRY InterlockedRemoveTailXorList(PXLIST_HEADER List,
 	PKSPIN_LOCK Lock);
 
 #endif
