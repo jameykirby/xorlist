@@ -100,4 +100,12 @@ PXLIST_ENTRY InterlockedRemoveHeadXList(PXLIST_HEADER List,
 PXLIST_ENTRY InterlockedRemoveTailXList(PXLIST_HEADER List,
 	PKSPIN_LOCK Lock);
 
+#define PushXList(List, Entry) InsertHeadXList(List, Entry)
+#define PopXList(List, Entry) RemoveHeadXList(List)
+
+#define InterlockedPushXList(List, Entry, Lock) \
+	InterlockedInsertHeadXList(List, Entry, Lock)
+#define InterlockedPopXList(List, Entry, Lock) \
+	InterlockedRemoveHeadXList(List, Lock)
+
 #endif
