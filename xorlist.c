@@ -44,7 +44,7 @@ PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	return Entry;
 }
 
-PXLIST_ENTRY InsertHeadXorList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
+PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	if (List->Head == NULL) {
 		Entry->Pointer = NULL;
 		List->Tail = Entry;
@@ -57,7 +57,7 @@ PXLIST_ENTRY InsertHeadXorList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	return Entry;
 }
 
-PXLIST_ENTRY RemoveHeadXorList(PXLIST_HEADER List) {
+PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List) {
 	PXLIST_ENTRY Entry = List->Head;
 	if (Entry != NULL) {
 		PXLIST_ENTRY Next = _xor_(NULL, Entry->Pointer);
@@ -72,7 +72,7 @@ PXLIST_ENTRY RemoveHeadXorList(PXLIST_HEADER List) {
 	return Entry;
 }
 
-PXLIST_ENTRY RemoveTailXorList(PXLIST_HEADER List) {
+PXLIST_ENTRY RemoveTailXList(PXLIST_HEADER List) {
 	PXLIST_ENTRY Entry = List->Tail;
 	if (Entry != NULL) {
 		PXLIST_ENTRY Prev = _xor_(Entry->Pointer, NULL);
@@ -87,38 +87,38 @@ PXLIST_ENTRY RemoveTailXorList(PXLIST_HEADER List) {
 	return Entry;
 }
 
-PXLIST_ENTRY InterlockedInsertTailXorList(PXLIST_HEADER List,
+PXLIST_ENTRY InterlockedInsertTailXList(PXLIST_HEADER List,
 	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock) {
 	KIRQL Irql;
 	KeAcquireSpinLock(Lock, &Irql);
-	InsertTailXorList(List, Entry);
+	InsertTailXList(List, Entry);
 	KeReleaseSpinLock(Lock, Irql);
 	return Entry;
 }
 
-PXLIST_ENTRY InterlockedInsertHeadXorList(PXLIST_HEADER List,
+PXLIST_ENTRY InterlockedInsertHeadXList(PXLIST_HEADER List,
 	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock) {
 	KIRQL Irql;
 	KeAcquireSpinLock(Lock, &Irql);
-	InsertHeadXorList(List, Entry);
+	InsertHeadXList(List, Entry);
 	KeReleaseSpinLock(Lock, Irql);
 	return Entry;
 }
 
-PXLIST_ENTRY InterlockedRemoveHeadXorList(PXLIST_HEADER List,
+PXLIST_ENTRY InterlockedRemoveHeadXList(PXLIST_HEADER List,
 	PKSPIN_LOCK Lock) {
 	KIRQL Irql;
 	KeAcquireSpinLock(Lock, &Irql);
-	PXLIST_ENTRY Entry = RemoveHeadXorList(List);
+	PXLIST_ENTRY Entry = RemoveHeadXList(List);
 	KeReleaseSpinLock(Lock, Irql);
 	return Entry;
 }
 
-PXLIST_ENTRY InterlockedRemoveTailXorList(PXLIST_HEADER List,
+PXLIST_ENTRY InterlockedRemoveTailXList(PXLIST_HEADER List,
 	PKSPIN_LOCK Lock) {
 	KIRQL Irql;
 	KeAcquireSpinLock(Lock, &Irql);
-	PXLIST_ENTRY Entry = RemoveTailXorList(List);
+	PXLIST_ENTRY Entry = RemoveTailXList(List);
 	KeReleaseSpinLock(Lock, Irql);
 	return Entry;
 }
