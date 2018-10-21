@@ -40,8 +40,9 @@ PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 		Entry->Pointer = _xor_(NULL, List->Tail);
 		List->Tail->Pointer = _xor_(Entry, _xor_(List->Tail->Pointer, NULL));
 	}
+	PXLIST_ENTRY PreviousTail = List->Tail;
 	List->Tail = Entry;
-	return Entry;
+	return PreviousTail;
 }
 
 PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
@@ -53,8 +54,9 @@ PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 		Entry->Pointer = _xor_(List->Head, NULL);
 		List->Head->Pointer = _xor_(Entry, _xor_(NULL, List->Head->Pointer));
 	}
+	PXLIST_ENTRY PreviousHead = List->Head;
 	List->Head = Entry;
-	return Entry;
+	return PreviousHead;
 }
 
 PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List) {
