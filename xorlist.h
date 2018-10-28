@@ -32,13 +32,11 @@
 // Example to enumerate the list from head to tail.
 //
 // EnumerateFromHeadXList(PXLIST_HEADER List) {
-//		PXLIST_ENTRY Current = List->Head;
-//		PXLIST_ENTRY Previous = NULL;
-//		PXLIST_ENTRY Next = NULL;
+//		PXLIST_ENTRY Current = List->Head, Previous = NULL, Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-//				"Item pointer: %p\n", Current));
-//			Next = _xor_(Previous, Current->Pointer);
+//				"Item Neighbors: %p\n", Current));
+//			Next = _xor_(Previous, Current->Neighbors);
 //			Previous = Current;
 //			Current = Next;
 //		}
@@ -47,16 +45,30 @@
 // Example to enumerate the list from tail to head.
 //
 // EnumerateFromTailXList(PXLIST_HEADER List) {
-//		PXLIST_ENTRY Current = List->Tail;
-//		PXLIST_ENTRY Previous = NULL;
-//		PXLIST_ENTRY Next = NULL;
+//		PXLIST_ENTRY Current = List->Tail, Previous = NULL, Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-//				"Item pointer: %p\n", Current));
-//			Previous = _xor_(Next, Current->Pointer);
+//				"Item Neighbors: %p\n", Current));
+//			Previous = _xor_(Next, Current->Neighbors);
 //			Next = Current;
 //			Current = Previous;
 //		}
+//	}
+
+// From head.
+//
+//	for (PXLIST_ENTRY *Neighbor = NULL, Entry = _xor_(List->Head, &Neighbor);
+//		Entry != NULL;
+//		Entry = _xor_(Entry, &Neighbor)) {
+//		// Do something.
+//	}
+
+// From tail.
+//
+//	for (PXLIST_ENTRY *Neighbor = NULL, Entry = _xor_(List->Tail, &Neighbor);
+//		Entry != NULL;
+//		Entry = _xor_(Entry, &Neighbor)) {
+//		// Do something.
 //	}
 
 #if !defined (_XLIST_H)
@@ -65,7 +77,7 @@
 #include <ntddk.h>
 
 typedef struct _XLIST_ENTRY {
-	struct _XLIST_ENTRY *Pointer;
+	struct _XLIST_ENTRY *Neighbors;
 } XLIST_ENTRY, *PXLIST_ENTRY;
 
 typedef struct _XLIST_HEADER {
@@ -99,6 +111,9 @@ PXLIST_ENTRY InterlockedRemoveHeadXList(PXLIST_HEADER List,
 
 PXLIST_ENTRY InterlockedRemoveTailXList(PXLIST_HEADER List,
 	PKSPIN_LOCK Lock);
+
+PXLIST_ENTRY EnumerateXList(PXLIST_HEADER List, PXLIST_ENTRY Start,
+	PXLIST_ENTRY *Neighbor);
 
 #define PushXList(List, Entry) InsertHeadXList(List, Entry)
 #define PopXList(List, Entry) RemoveHeadXList(List)
