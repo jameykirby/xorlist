@@ -33,12 +33,12 @@
 
 PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	if (List->Head == NULL) {
-		Entry->Neighbors = NULL;
+		Entry->Neighbours = NULL;
 		List->Head = Entry;
 	}
 	else {
-		Entry->Neighbors = _xor_(NULL, List->Tail);
-		List->Tail->Neighbors = _xor_(Entry, _xor_(List->Tail->Neighbors, NULL));
+		Entry->Neighbours = _xor_(NULL, List->Tail);
+		List->Tail->Neighbours = _xor_(Entry, _xor_(List->Tail->Neighbours, NULL));
 	}
 	PXLIST_ENTRY PreviousTail = List->Tail;
 	List->Tail = Entry;
@@ -47,12 +47,12 @@ PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 
 PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	if (List->Head == NULL) {
-		Entry->Neighbors = NULL;
+		Entry->Neighbours = NULL;
 		List->Tail = Entry;
 	}
 	else {
-		Entry->Neighbors = _xor_(List->Head, NULL);
-		List->Head->Neighbors = _xor_(Entry, _xor_(NULL, List->Head->Neighbors));
+		Entry->Neighbours = _xor_(List->Head, NULL);
+		List->Head->Neighbours = _xor_(Entry, _xor_(NULL, List->Head->Neighbours));
 	}
 	PXLIST_ENTRY PreviousHead = List->Head;
 	List->Head = Entry;
@@ -62,12 +62,12 @@ PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List) {
 	PXLIST_ENTRY Entry = List->Head;
 	if (Entry != NULL) {
-		PXLIST_ENTRY Next = _xor_(NULL, Entry->Neighbors);
+		PXLIST_ENTRY Next = _xor_(NULL, Entry->Neighbours);
 		if (Next == NULL) {
 			List->Tail = NULL;
 		}
 		else {
-			Next->Neighbors = _xor_(Entry, _xor_(NULL, Next->Neighbors));
+			Next->Neighbours = _xor_(Entry, _xor_(NULL, Next->Neighbours));
 		}
 		List->Head = Next;
 	}
@@ -77,12 +77,12 @@ PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List) {
 PXLIST_ENTRY RemoveTailXList(PXLIST_HEADER List) {
 	PXLIST_ENTRY Entry = List->Tail;
 	if (Entry != NULL) {
-		PXLIST_ENTRY Prev = _xor_(Entry->Neighbors, NULL);
+		PXLIST_ENTRY Prev = _xor_(Entry->Neighbours, NULL);
 		if (Prev == NULL) {
 			List->Head = NULL;
 		}
 		else {
-			Prev->Neighbors = _xor_(Entry, _xor_(Prev->Neighbors, NULL));
+			Prev->Neighbours = _xor_(Entry, _xor_(Prev->Neighbours, NULL));
 		}
 		List->Tail = Prev;
 	}
@@ -93,19 +93,19 @@ PXLIST_ENTRY RemoveXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	PXLIST_ENTRY Current = List->Head;
 	for (PXLIST_ENTRY Previous = NULL, Next = NULL;
 		Current != NULL;
-		Next = _xor_(Previous, Current->Neighbors), Previous = Current, Current = Next) {
+		Next = _xor_(Previous, Current->Neighbours), Previous = Current, Current = Next) {
 		if (Current == Entry) {
 			if (Previous == NULL) {
 				List->Head = Next;
 			}
 			else {
-				Previous->Neighbors = _xor_(Previous->Neighbors, _xor_(Current, Next));
+				Previous->Neighbours = _xor_(Previous->Neighbours, _xor_(Current, Next));
 			}
 			if (Next == NULL) {
 				List->Tail = Previous;
 			}
 			else {
-				Next->Neighbors = _xor_(Next->Neighbors, _xor_(Current, Previous));
+				Next->Neighbours = _xor_(Next->Neighbours, _xor_(Current, Previous));
 			}
 			break;
 		}

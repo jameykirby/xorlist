@@ -35,8 +35,8 @@
 //		PXLIST_ENTRY Current = List->Head, Previous = NULL, Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-//				"Item Neighbors: %p\n", Current));
-//			Next = _xor_(Previous, Current->Neighbors);
+//				"Item Neighbours: %p\n", Current));
+//			Next = _xor_(Previous, Current->Neighbours);
 //			Previous = Current;
 //			Current = Next;
 //		}
@@ -48,8 +48,8 @@
 //		PXLIST_ENTRY Current = List->Tail, Previous = NULL, Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-//				"Item Neighbors: %p\n", Current));
-//			Previous = _xor_(Next, Current->Neighbors);
+//				"Item Neighbours: %p\n", Current));
+//			Previous = _xor_(Next, Current->Neighbours);
 //			Next = Current;
 //			Current = Previous;
 //		}
@@ -57,17 +57,17 @@
 
 // From head.
 //
-//	for (PXLIST_ENTRY *Neighbor = NULL, Entry = _xor_(List->Head, &Neighbor);
+//	for (PXLIST_ENTRY *Neighbour = NULL, Entry = _xor_(List->Head, &Neighbour);
 //		Entry != NULL;
-//		Entry = _xor_(Entry, &Neighbor)) {
+//		Entry = _xor_(Entry, &Neighbour)) {
 //		// Do something.
 //	}
 
 // From tail.
 //
-//	for (PXLIST_ENTRY *Neighbor = NULL, Entry = _xor_(List->Tail, &Neighbor);
+//	for (PXLIST_ENTRY *Neighbour = NULL, Entry = _xor_(List->Tail, &Neighbour);
 //		Entry != NULL;
-//		Entry = _xor_(Entry, &Neighbor)) {
+//		Entry = _xor_(Entry, &Neighbour)) {
 //		// Do something.
 //	}
 
@@ -77,7 +77,7 @@
 #include <ntddk.h>
 
 typedef struct _XLIST_ENTRY {
-	struct _XLIST_ENTRY *Neighbors;
+	struct _XLIST_ENTRY *Neighbours;
 } XLIST_ENTRY, *PXLIST_ENTRY;
 
 typedef struct _XLIST_HEADER {
