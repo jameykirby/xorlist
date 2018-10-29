@@ -35,8 +35,8 @@
 //		PXLIST_ENTRY Current = List->Head, Previous = NULL, Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-//				"Item Neighbours: %p\n", Current));
-//			Next = _xor_(Previous, Current->Neighbours);
+//				"Item: %p\n", Current));
+//			Next = _xor_(Previous, Current->Links);
 //			Previous = Current;
 //			Current = Next;
 //		}
@@ -48,27 +48,11 @@
 //		PXLIST_ENTRY Current = List->Tail, Previous = NULL, Next = NULL;
 //		while (Current != NULL) {
 //			KdPrintEx((DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL,
-//				"Item Neighbours: %p\n", Current));
-//			Previous = _xor_(Next, Current->Neighbours);
+//				"Item: %p\n", Current));
+//			Previous = _xor_(Next, Current->Links);
 //			Next = Current;
 //			Current = Previous;
 //		}
-//	}
-
-// From head.
-//
-//	for (PXLIST_ENTRY *Neighbour = NULL, Entry = _xor_(List->Head, &Neighbour);
-//		Entry != NULL;
-//		Entry = _xor_(Entry, &Neighbour)) {
-//		// Do something.
-//	}
-
-// From tail.
-//
-//	for (PXLIST_ENTRY *Neighbour = NULL, Entry = _xor_(List->Tail, &Neighbour);
-//		Entry != NULL;
-//		Entry = _xor_(Entry, &Neighbour)) {
-//		// Do something.
 //	}
 
 #if !defined (_XLIST_H)
@@ -77,7 +61,7 @@
 #include <ntddk.h>
 
 typedef struct _XLIST_ENTRY {
-	struct _XLIST_ENTRY *Neighbours;
+	struct _XLIST_ENTRY *Links;
 } XLIST_ENTRY, *PXLIST_ENTRY;
 
 typedef struct _XLIST_HEADER {
@@ -111,9 +95,6 @@ PXLIST_ENTRY InterlockedRemoveHeadXList(PXLIST_HEADER List,
 
 PXLIST_ENTRY InterlockedRemoveTailXList(PXLIST_HEADER List,
 	PKSPIN_LOCK Lock);
-
-PXLIST_ENTRY EnumerateXList(PXLIST_HEADER List, PXLIST_ENTRY Start,
-	PXLIST_ENTRY *Neighbor);
 
 #define PushXList(List, Entry) InsertHeadXList(List, Entry)
 #define PopXList(List, Entry) RemoveHeadXList(List)
