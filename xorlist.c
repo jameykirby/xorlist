@@ -29,6 +29,7 @@
 // For more information, please refer to <http://unlicense.org/>
 // 
 
+#include <ntddk.h>
 #include "xorlist.h"
 
 PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {

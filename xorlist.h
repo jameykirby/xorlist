@@ -58,7 +58,7 @@
 #if !defined (_XLIST_H)
 #define _XLIST_H
 
-#include <ntddk.h>
+#include <ntdef.h>
 
 typedef struct _XLIST_ENTRY {
 	struct _XLIST_ENTRY *Links;
