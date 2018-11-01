@@ -78,14 +78,14 @@ PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List) {
 PXLIST_ENTRY RemoveTailXList(PXLIST_HEADER List) {
 	PXLIST_ENTRY Entry = List->Tail;
 	if (Entry != NULL) {
-		PXLIST_ENTRY Prev = _xor_(Entry->Links, NULL);
-		if (Prev == NULL) {
+		PXLIST_ENTRY Previous = _xor_(Entry->Links, NULL);
+		if (Previous == NULL) {
 			List->Head = NULL;
 		}
 		else {
-			Prev->Links = _xor_(Entry, _xor_(Prev->Links, NULL));
+			Previous->Links = _xor_(Entry, _xor_(Previous->Links, NULL));
 		}
-		List->Tail = Prev;
+		List->Tail = Previous;
 	}
 	return Entry;
 }
