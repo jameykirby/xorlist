@@ -55,8 +55,7 @@
 //		}
 //	}
 
-#if !defined (_XLIST_H)
-#define _XLIST_H
+#pragma once
 
 #include <ntdef.h>
 
@@ -79,15 +78,15 @@ FORCEINLINE VOID InitializeXListHeader(PXLIST_HEADER List) {
 	return;
 }
 
-PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry);
-PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry);
+VOID InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry);
+VOID InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry);
 PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List);
 PXLIST_ENTRY RemoveTailXList(PXLIST_HEADER List);
 
-PXLIST_ENTRY InterlockedInsertTailXList(PXLIST_HEADER List,
+VOID InterlockedInsertTailXList(PXLIST_HEADER List,
 	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock);
 
-PXLIST_ENTRY InterlockedInsertHeadXList(PXLIST_HEADER List,
+VOID InterlockedInsertHeadXList(PXLIST_HEADER List,
 	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock);
 
 PXLIST_ENTRY InterlockedRemoveHeadXList(PXLIST_HEADER List,
@@ -103,5 +102,3 @@ PXLIST_ENTRY InterlockedRemoveTailXList(PXLIST_HEADER List,
 	InterlockedInsertHeadXList(List, Entry, Lock)
 #define InterlockedPopXList(List, Entry, Lock) \
 	InterlockedRemoveHeadXList(List, Lock)
-
-#endif

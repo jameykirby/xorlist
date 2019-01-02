@@ -32,7 +32,7 @@
 #include <ntddk.h>
 #include "xorlist.h"
 
-PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
+VOID InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	if (List->Head == NULL) {
 		Entry->Links = NULL;
 		List->Head = Entry;
@@ -41,12 +41,11 @@ PXLIST_ENTRY InsertTailXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 		Entry->Links = _xor_(NULL, List->Tail);
 		List->Tail->Links = _xor_(Entry, _xor_(List->Tail->Links, NULL));
 	}
-	PXLIST_ENTRY PreviousTail = List->Tail;
 	List->Tail = Entry;
-	return PreviousTail;
+	return;
 }
 
-PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
+VOID InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	if (List->Head == NULL) {
 		Entry->Links = NULL;
 		List->Tail = Entry;
@@ -55,9 +54,8 @@ PXLIST_ENTRY InsertHeadXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 		Entry->Links = _xor_(List->Head, NULL);
 		List->Head->Links = _xor_(Entry, _xor_(NULL, List->Head->Links));
 	}
-	PXLIST_ENTRY PreviousHead = List->Head;
 	List->Head = Entry;
-	return PreviousHead;
+	return;
 }
 
 PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List) {
@@ -78,14 +76,14 @@ PXLIST_ENTRY RemoveHeadXList(PXLIST_HEADER List) {
 PXLIST_ENTRY RemoveTailXList(PXLIST_HEADER List) {
 	PXLIST_ENTRY Entry = List->Tail;
 	if (Entry != NULL) {
-		PXLIST_ENTRY Previous = _xor_(Entry->Links, NULL);
-		if (Previous == NULL) {
+		PXLIST_ENTRY Prev = _xor_(Entry->Links, NULL);
+		if (Prev == NULL) {
 			List->Head = NULL;
 		}
 		else {
-			Previous->Links = _xor_(Entry, _xor_(Previous->Links, NULL));
+			Prev->Links = _xor_(Entry, _xor_(Prev->Links, NULL));
 		}
-		List->Tail = Previous;
+		List->Tail = Prev;
 	}
 	return Entry;
 }
@@ -114,22 +112,22 @@ PXLIST_ENTRY RemoveXList(PXLIST_HEADER List, PXLIST_ENTRY Entry) {
 	return Current;
 }
 
-PXLIST_ENTRY InterlockedInsertTailXList(PXLIST_HEADER List,
+VOID InterlockedInsertTailXList(PXLIST_HEADER List,
 	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock) {
 	KLOCK_QUEUE_HANDLE LockHandle;
 	KeAcquireInStackQueuedSpinLock(Lock, &LockHandle);
 	InsertTailXList(List, Entry);
 	KeReleaseInStackQueuedSpinLock(&LockHandle);
-	return Entry;
+	return;
 }
 
-PXLIST_ENTRY InterlockedInsertHeadXList(PXLIST_HEADER List,
+VOID InterlockedInsertHeadXList(PXLIST_HEADER List,
 	PXLIST_ENTRY Entry, PKSPIN_LOCK Lock) {
 	KLOCK_QUEUE_HANDLE LockHandle;
 	KeAcquireInStackQueuedSpinLock(Lock, &LockHandle);
 	InsertHeadXList(List, Entry);
 	KeReleaseInStackQueuedSpinLock(&LockHandle);
-	return Entry;
+	return;
 }
 
 PXLIST_ENTRY InterlockedRemoveHeadXList(PXLIST_HEADER List,
@@ -149,3 +147,4 @@ PXLIST_ENTRY InterlockedRemoveTailXList(PXLIST_HEADER List,
 	KeReleaseInStackQueuedSpinLock(&LockHandle);
 	return Entry;
 }
+
